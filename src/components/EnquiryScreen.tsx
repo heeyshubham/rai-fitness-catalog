@@ -66,6 +66,16 @@ export default function EnquiryScreen({ onBack, catalog }: EnquiryScreenProps) {
 
   const update = (k: keyof FormState, v: string) => setForm(f => ({ ...f, [k]: v }));
 
+  const handleSend = async () => {
+    setGenerating(true);
+    try {
+      await downloadQuote(form, catalog.items);
+    } finally {
+      setGenerating(false);
+    }
+    setStep(3);
+  };
+
   const items = Object.entries(catalog.items)
     .map(([id, qty]) => ({ p: PRODUCTS.find(x => x.id === id)!, qty }))
     .filter(x => x.p);
@@ -158,7 +168,17 @@ export default function EnquiryScreen({ onBack, catalog }: EnquiryScreenProps) {
             <p style={{ color: 'var(--text-dim)', margin: '0 0 22px' }}>We&apos;ll attach your catalog as a PDF and forward to the right specialist.</p>
             <div className="form-field">
               <label>Email</label>
-              <input type="email" value={form.email} onChange={e => update('email', e.target.value)} placeholder="you@gym.com" />
+              <div style={{ display: 'flex', gap: 8 }}>
+                <input type="email" value={form.email} onChange={e => update('email', e.target.value)} placeholder="you@gym.com" style={{ flex: 1 }} />
+                <button
+                  className="btn-primary"
+                  disabled={generating}
+                  onClick={handleSend}
+                  style={{ flex: 'none', whiteSpace: 'nowrap', padding: '14px 18px', fontSize: 13 }}
+                >
+                  {generating ? 'Generating…' : 'Send & Download'}
+                </button>
+              </div>
             </div>
             <div style={{ padding: 18, background: 'var(--surface)', borderRadius: 'var(--r-lg)', border: '1px solid var(--line)', marginBottom: 14 }}>
               <div className="section-h" style={{ margin: '0 0 10px' }}>Contact</div>
@@ -213,19 +233,9 @@ export default function EnquiryScreen({ onBack, catalog }: EnquiryScreenProps) {
           <button
             className="btn-primary"
             disabled={generating}
-            onClick={async () => {
+            onClick={() => {
               if (step === 0 && !form.name) return;
-              if (step === 2) {
-                setGenerating(true);
-                try {
-                  await downloadQuote(form, catalog.items);
-                } finally {
-                  setGenerating(false);
-                }
-                setStep(3);
-              } else {
-                setStep(s => s + 1);
-              }
+              if (step === 2) { handleSend(); } else { setStep(s => s + 1); }
             }}
           >
             {generating ? 'Generating…' : step === 2 ? 'Send & Download PDF' : 'Continue'}
