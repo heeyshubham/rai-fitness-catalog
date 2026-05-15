@@ -42,9 +42,11 @@ function ProductHero({ p }: ProductHeroProps) {
     el.scrollTo({ left: i * el.clientWidth, behavior: 'smooth' });
   };
 
+  const hasPhoto = images.some(im => im.src);
+
   if (images.length === 1) {
     return (
-      <div className="detail-hero" style={{ position: 'relative' }}>
+      <div className={cls('detail-hero', hasPhoto && 'detail-hero--lit')} style={{ position: 'relative' }}>
         {images[0].src
           ? <Image src={images[0].src} alt={images[0].label || p.name} fill style={{ objectFit: 'contain', padding: '24px' }} sizes="100vw" priority />
           : <Silhouette kind={images[0].silhouette} hue={images[0].hue} label={images[0].label || p.code} />
@@ -54,7 +56,7 @@ function ProductHero({ p }: ProductHeroProps) {
   }
 
   return (
-    <div className="detail-hero">
+    <div className={cls('detail-hero', hasPhoto && 'detail-hero--lit')}>
       <div className="hero-rail" ref={railRef}>
         {images.map((im, i) => (
           <div key={i} className="hero-slide" style={{ position: 'relative' }}>

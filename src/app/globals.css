@@ -262,6 +262,10 @@ button { border: none; background: none; cursor: pointer; padding: 0; }
   background: var(--surface-2);
   overflow: hidden;
 }
+/* Warm off-white background when showing real product photos (black machines) */
+.card-media--lit {
+  background: #ece8de;
+}
 .card-media .badge-row {
   position: absolute;
   top: 14px;
@@ -592,8 +596,15 @@ button { border: none; background: none; cursor: pointer; padding: 0; }
   position: absolute;
   bottom: 0; left: 0; right: 0;
   height: 160px;
-  background: linear-gradient(180deg, transparent, var(--bg));
+  background: linear-gradient(180deg, rgba(12,10,9,0), var(--bg));
   pointer-events: none;
+}
+/* Warm off-white background when showing real product photos */
+.detail-hero--lit {
+  background: #ece8de;
+}
+.detail-hero--lit::after {
+  background: linear-gradient(180deg, rgba(236,232,222,0) 0%, rgba(236,232,222,0.2) 30%, var(--bg) 100%);
 }
 
 .detail-body {
