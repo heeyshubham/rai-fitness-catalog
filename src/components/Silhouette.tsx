@@ -209,7 +209,6 @@ export default function Silhouette({ kind, hue = 8, label }: SilhouetteProps) {
       viewBox="0 0 400 340"
       xmlns="http://www.w3.org/2000/svg"
       preserveAspectRatio="xMidYMid meet"
-      className="silhouette"
       style={{ position: 'absolute', inset: 0, width: '100%', height: '100%' }}
     >
       {bg}
