@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
+import Image from 'next/image';
 import { CATEGORIES, MUSCLES, USE_CASES, PRODUCTS } from '@/data';
 import type { CatalogState, Product, ProductImage } from '@/types';
 import Icon from './Icon';
@@ -44,7 +45,10 @@ function ProductHero({ p }: ProductHeroProps) {
   if (images.length === 1) {
     return (
       <div className="detail-hero" style={{ position: 'relative' }}>
-        <Silhouette kind={images[0].silhouette} hue={images[0].hue} label={images[0].label || p.code} />
+        {images[0].src
+          ? <Image src={images[0].src} alt={images[0].label || p.name} fill style={{ objectFit: 'contain', padding: '24px' }} sizes="100vw" priority />
+          : <Silhouette kind={images[0].silhouette} hue={images[0].hue} label={images[0].label || p.code} />
+        }
       </div>
     );
   }
@@ -53,8 +57,11 @@ function ProductHero({ p }: ProductHeroProps) {
     <div className="detail-hero">
       <div className="hero-rail" ref={railRef}>
         {images.map((im, i) => (
-          <div key={i} className="hero-slide">
-            <Silhouette kind={im.silhouette} hue={im.hue} label={im.label} />
+          <div key={i} className="hero-slide" style={{ position: 'relative' }}>
+            {im.src
+              ? <Image src={im.src} alt={im.label || p.name} fill style={{ objectFit: 'contain', padding: '24px' }} sizes="100vw" priority={i === 0} />
+              : <Silhouette kind={im.silhouette} hue={im.hue} label={im.label} />
+            }
           </div>
         ))}
       </div>
@@ -204,8 +211,11 @@ export default function ProductDetail({ p, onClose, catalog, onOpen, onTalk }: P
         <div className="related-row">
           {related.map(r => (
             <div key={r.id} className="related-card" onClick={() => onOpen(r.id)}>
-              <div className="related-media">
-                <Silhouette kind={r.silhouette} hue={r.hue} />
+              <div className="related-media" style={{ position: 'relative' }}>
+                {r.photo
+                  ? <Image src={r.photo} alt={r.name} fill style={{ objectFit: 'contain', padding: '8px' }} sizes="220px" />
+                  : <Silhouette kind={r.silhouette} hue={r.hue} />
+                }
               </div>
               <div className="related-body">
                 <h4>{r.name}</h4>

@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import { PRODUCTS, CATEGORIES } from '@/data';
 import type { CatalogState } from '@/types';
 import Icon from './Icon';
@@ -74,8 +75,11 @@ export default function CatalogScreen({ catalog, onBack, onOpen, onEnquire }: Ca
           <>
             {items.map(({ p, qty }) => (
               <div key={p.id} className="cat-row">
-                <div className="thumb" onClick={() => onOpen(p.id)} style={{ cursor: 'pointer' }}>
-                  <Silhouette kind={p.silhouette} hue={p.hue} />
+                <div className="thumb" onClick={() => onOpen(p.id)} style={{ cursor: 'pointer', position: 'relative' }}>
+                  {p.photo
+                    ? <Image src={p.photo} alt={p.name} fill style={{ objectFit: 'contain', padding: '4px' }} sizes="72px" />
+                    : <Silhouette kind={p.silhouette} hue={p.hue} />
+                  }
                 </div>
                 <div className="info" onClick={() => onOpen(p.id)} style={{ cursor: 'pointer' }}>
                   <h4>{p.name}</h4>

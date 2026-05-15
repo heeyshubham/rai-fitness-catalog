@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useMemo, useEffect, useRef } from 'react';
+import Image from 'next/image';
 import { PRODUCTS, CATEGORIES, MUSCLES } from '@/data';
 import type { Route, Filters } from '@/types';
 import { useCatalog } from '@/hooks/useCatalog';
@@ -49,8 +50,11 @@ function DesktopCatalogPanel({
       <div style={{ overflowY: 'auto', flex: 1, marginRight: -10, paddingRight: 10 }}>
         {items.map(({ p, qty }) => (
           <div key={p.id} className="cat-row" style={{ padding: 10, marginBottom: 8, cursor: 'pointer' }} onClick={() => onOpen(p.id)}>
-            <div className="thumb" style={{ width: 52, height: 52, borderRadius: 12 }}>
-              <Silhouette kind={p.silhouette} hue={p.hue} />
+            <div className="thumb" style={{ width: 52, height: 52, borderRadius: 12, position: 'relative' }}>
+              {p.photo
+                ? <Image src={p.photo} alt={p.name} fill style={{ objectFit: 'contain', padding: '3px' }} sizes="52px" />
+                : <Silhouette kind={p.silhouette} hue={p.hue} />
+              }
             </div>
             <div className="info">
               <h4 style={{ fontSize: 14 }}>{p.name}</h4>

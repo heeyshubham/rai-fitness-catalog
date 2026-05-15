@@ -15,6 +15,7 @@ export interface UseCase {
 }
 
 export interface ProductImage {
+  src?: string;       // real photo path (preferred when present)
   silhouette: string;
   hue: number;
   label: string;
@@ -31,9 +32,10 @@ export interface Product {
   category: string;
   muscles: string[];
   silhouette: string;
+  hue: number;
+  photo?: string;     // primary real photo for card + hero (falls back to silhouette)
   code: string;
   series: string;
-  hue: number;
   weightStack: string;
   capacity: string;
   footprint: string;

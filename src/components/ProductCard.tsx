@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import { CATEGORIES, MUSCLES } from '@/data';
 import type { CatalogState, Product } from '@/types';
 import Icon from './Icon';
@@ -20,7 +21,10 @@ export default function ProductCard({ p, onOpen, catalog }: ProductCardProps) {
   return (
     <article className="card" onClick={onOpen}>
       <div className="card-media">
-        <Silhouette kind={p.silhouette} hue={p.hue} label={p.code} />
+        {p.photo
+          ? <Image src={p.photo} alt={p.name} fill style={{ objectFit: 'contain', padding: '12px' }} sizes="(max-width: 880px) 100vw, 400px" />
+          : <Silhouette kind={p.silhouette} hue={p.hue} label={p.code} />
+        }
         <div className="badge-row">
           <span className="cat-tag">
             <span className="dot" />
