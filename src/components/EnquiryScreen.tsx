@@ -105,10 +105,6 @@ export default function EnquiryScreen({ onBack, catalog }: EnquiryScreenProps) {
               <input value={form.name} onChange={e => update('name', e.target.value)} placeholder="Your name" />
             </div>
             <div className="form-field">
-              <label>Email</label>
-              <input type="email" value={form.email} onChange={e => update('email', e.target.value)} placeholder="you@gym.com" />
-            </div>
-            <div className="form-field">
               <label>Phone</label>
               <input value={form.phone} onChange={e => update('phone', e.target.value)} placeholder="+91 …" />
             </div>
@@ -160,6 +156,10 @@ export default function EnquiryScreen({ onBack, catalog }: EnquiryScreenProps) {
               Review &amp; send
             </h2>
             <p style={{ color: 'var(--text-dim)', margin: '0 0 22px' }}>We&apos;ll attach your catalog as a PDF and forward to the right specialist.</p>
+            <div className="form-field">
+              <label>Email</label>
+              <input type="email" value={form.email} onChange={e => update('email', e.target.value)} placeholder="you@gym.com" />
+            </div>
             <div style={{ padding: 18, background: 'var(--surface)', borderRadius: 'var(--r-lg)', border: '1px solid var(--line)', marginBottom: 14 }}>
               <div className="section-h" style={{ margin: '0 0 10px' }}>Contact</div>
               <div style={{ fontFamily: 'var(--font-display)', fontSize: 18, fontWeight: 600 }}>{form.name || '—'}</div>
