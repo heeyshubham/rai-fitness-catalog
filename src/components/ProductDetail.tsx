@@ -193,7 +193,7 @@ export default function ProductDetail({ p, onClose, catalog, onOpen, onTalk }: P
 
         <div className="expert-cta" onClick={onTalk} style={{ cursor: 'pointer' }}>
           <div className="av">A</div>
-          <div>
+          <div className="expert-info">
             <div className="t1">Talk to a specialist</div>
             <div className="t2">Get a tailored quote for {p.name} →</div>
           </div>

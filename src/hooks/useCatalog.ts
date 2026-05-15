@@ -1,20 +1,29 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import type { CatalogState } from '@/types';
 
 function useLocalState<T>(key: string, initial: T): [T, (v: T | ((prev: T) => T)) => void] {
-  const [v, setV] = useState<T>(() => {
-    if (typeof window === 'undefined') return initial;
+  // Always start with `initial` so server and client render identically,
+  // avoiding the hydration mismatch when localStorage has saved data.
+  const [v, setV] = useState<T>(initial);
+  const loaded = useRef(false);
+
+  // After mount, hydrate from localStorage (client only, never runs on server).
+  useEffect(() => {
     try {
       const s = localStorage.getItem(key);
-      return s ? JSON.parse(s) : initial;
-    } catch {
-      return initial;
-    }
-  });
+      if (s) setV(JSON.parse(s));
+    } catch {}
+  }, [key]);
 
+  // Persist changes back to localStorage, but skip the very first run
+  // (before we've had a chance to hydrate) so we don't overwrite saved data.
   useEffect(() => {
+    if (!loaded.current) {
+      loaded.current = true;
+      return;
+    }
     try {
       localStorage.setItem(key, JSON.stringify(v));
     } catch {}

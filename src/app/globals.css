@@ -32,6 +32,10 @@
 * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 html, body { margin: 0; padding: 0; }
 
+html {
+  overflow-x: hidden;
+}
+
 html, body {
   background: var(--bg);
   color: var(--text);
@@ -41,6 +45,8 @@ html, body {
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
   overscroll-behavior: none;
+  width: 100%;
+  max-width: 100vw;
 }
 
 button, input, textarea, select {
@@ -83,8 +89,9 @@ button { border: none; background: none; cursor: pointer; padding: 0; }
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 18px 20px 12px;
-  background: linear-gradient(180deg, var(--bg) 60%, transparent);
+  padding: max(18px, calc(env(safe-area-inset-top, 0px) + 10px)) 20px 12px;
+  background: linear-gradient(180deg, var(--bg) 70%, transparent);
+  -webkit-backdrop-filter: blur(12px);
   backdrop-filter: blur(12px);
 }
 
@@ -163,11 +170,12 @@ button { border: none; background: none; cursor: pointer; padding: 0; }
 .feed-hero h1 {
   font-family: var(--font-display);
   font-weight: 700;
-  font-size: 38px;
+  font-size: clamp(28px, 9.5vw, 38px);
   letter-spacing: -0.025em;
   line-height: 1.02;
   margin: 0;
   text-wrap: balance;
+  word-break: break-word;
 }
 .feed-hero h1 em {
   font-style: normal;
@@ -229,7 +237,8 @@ button { border: none; background: none; cursor: pointer; padding: 0; }
 
 /* ----------- Product card (mobile feed) ----------- */
 .feed {
-  padding: 0 20px 140px;
+  padding: 0 20px;
+  padding-bottom: max(140px, calc(120px + env(safe-area-inset-bottom, 0px)));
   display: flex;
   flex-direction: column;
   gap: 14px;
@@ -295,6 +304,8 @@ button { border: none; background: none; cursor: pointer; padding: 0; }
   letter-spacing: -0.02em;
   margin: 0;
   line-height: 1.1;
+  word-break: break-word;
+  overflow-wrap: break-word;
 }
 .card-body .sub {
   display: flex;
@@ -316,6 +327,7 @@ button { border: none; background: none; cursor: pointer; padding: 0; }
 .card-meta {
   display: flex;
   gap: 14px;
+  flex-wrap: wrap;
   margin-top: 14px;
   padding-top: 14px;
   border-top: 1px solid var(--line);
@@ -352,6 +364,8 @@ button { border: none; background: none; cursor: pointer; padding: 0; }
   letter-spacing: -0.005em;
   transition: transform 0.15s, background 0.15s, box-shadow 0.2s;
   box-shadow: 0 10px 24px -10px rgba(230, 57, 70, 0.55), 0 0 0 1px rgba(255,255,255,0.06) inset;
+  white-space: nowrap;
+  min-width: 0;
 }
 .card-add-btn:hover { background: #d12e3c; transform: translateY(-1px); }
 .card-add-btn:active { transform: scale(0.985); }
@@ -385,13 +399,16 @@ button { border: none; background: none; cursor: pointer; padding: 0; }
 /* ----------- Floating CTA ----------- */
 .fab-stack {
   position: fixed;
-  bottom: 24px;
+  bottom: max(24px, calc(env(safe-area-inset-bottom, 0px) + 16px));
   left: 50%;
   transform: translateX(-50%);
   z-index: 40;
   display: flex;
   gap: 8px;
   align-items: center;
+  flex-wrap: wrap-reverse;
+  justify-content: center;
+  max-width: min(420px, calc(100vw - 32px));
 }
 .fab {
   display: inline-flex;
@@ -403,6 +420,7 @@ button { border: none; background: none; cursor: pointer; padding: 0; }
   color: var(--bg);
   font-weight: 600;
   font-size: 14px;
+  white-space: nowrap;
   box-shadow: 0 20px 40px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.06);
   transition: transform 0.15s;
 }
@@ -436,6 +454,7 @@ button { border: none; background: none; cursor: pointer; padding: 0; }
   background: var(--bg);
   overflow-y: auto;
   overflow-x: hidden;
+  overscroll-behavior: contain;
   animation: rise 0.32s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 @keyframes rise {
@@ -447,7 +466,7 @@ button { border: none; background: none; cursor: pointer; padding: 0; }
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 18px 20px;
+  padding: max(18px, calc(env(safe-area-inset-top, 0px) + 10px)) 20px 18px;
 }
 .detail-topbar--sticky {
   position: sticky;
@@ -485,9 +504,16 @@ button { border: none; background: none; cursor: pointer; padding: 0; }
   position: relative;
   height: 62vh;
   min-height: 480px;
-  margin-top: -78px;
+  margin-top: calc(-1 * max(78px, calc(env(safe-area-inset-top, 0px) + 68px)));
   background: var(--surface);
   overflow: hidden;
+}
+
+@media (max-width: 879.98px) {
+  .detail-hero {
+    height: 55vh;
+    min-height: 280px;
+  }
 }
 
 .hero-rail {
@@ -541,7 +567,7 @@ button { border: none; background: none; cursor: pointer; padding: 0; }
 }
 .hero-dots {
   position: absolute;
-  bottom: 140px;
+  bottom: 100px;
   left: 0; right: 0;
   z-index: 3;
   display: flex;
@@ -571,7 +597,8 @@ button { border: none; background: none; cursor: pointer; padding: 0; }
 }
 
 .detail-body {
-  padding: 24px 20px 200px;
+  padding: 24px 20px;
+  padding-bottom: max(200px, calc(160px + env(safe-area-inset-bottom, 0px)));
   position: relative;
   z-index: 2;
   margin-top: -80px;
@@ -579,18 +606,21 @@ button { border: none; background: none; cursor: pointer; padding: 0; }
 
 .detail-title {
   font-family: var(--font-display);
-  font-size: 40px;
+  font-size: clamp(28px, 9vw, 40px);
   font-weight: 700;
   letter-spacing: -0.03em;
   line-height: 1;
   margin: 0;
   text-wrap: balance;
+  word-break: break-word;
+  overflow-wrap: break-word;
 }
 
 .detail-sub {
   display: flex;
   align-items: center;
-  gap: 10px;
+  flex-wrap: wrap;
+  gap: 8px;
   margin-top: 14px;
   font-family: var(--font-mono);
   font-size: 11px;
@@ -753,6 +783,7 @@ button { border: none; background: none; cursor: pointer; padding: 0; }
   display: flex;
   gap: 16px;
   align-items: center;
+  overflow: hidden;
 }
 .expert-cta .av {
   width: 56px; height: 56px;
@@ -776,6 +807,9 @@ button { border: none; background: none; cursor: pointer; padding: 0; }
   font-size: 13px;
   color: var(--text-dim);
   margin-top: 2px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 .expert-cta .arrow {
   margin-left: auto;
@@ -790,7 +824,8 @@ button { border: none; background: none; cursor: pointer; padding: 0; }
 .detail-actionbar {
   position: fixed;
   bottom: 0; left: 0; right: 0;
-  padding: 14px 20px 20px;
+  padding: 14px 20px;
+  padding-bottom: max(20px, calc(env(safe-area-inset-bottom, 0px) + 12px));
   background: linear-gradient(180deg, transparent, var(--bg) 30%);
   z-index: 60;
   display: flex;
@@ -848,8 +883,9 @@ button { border: none; background: none; cursor: pointer; padding: 0; }
   z-index: 81;
   background: var(--bg-2);
   border-radius: 28px 28px 0 0;
-  max-height: 85vh;
+  max-height: 88vh;
   overflow-y: auto;
+  overscroll-behavior: contain;
   animation: sheet-up 0.32s cubic-bezier(0.2, 0.8, 0.2, 1);
   border-top: 1px solid var(--line);
 }
@@ -884,7 +920,8 @@ button { border: none; background: none; cursor: pointer; padding: 0; }
 .sheet-actions {
   position: sticky;
   bottom: 0;
-  padding: 16px 22px 24px;
+  padding: 16px 22px;
+  padding-bottom: max(24px, calc(env(safe-area-inset-bottom, 0px) + 16px));
   background: linear-gradient(180deg, transparent, var(--bg-2) 30%);
   display: flex;
   gap: 10px;
@@ -997,7 +1034,8 @@ button { border: none; background: none; cursor: pointer; padding: 0; }
 
 /* ----------- Catalog / wishlist ----------- */
 .cat-page {
-  padding: 0 20px 140px;
+  padding: 0 20px;
+  padding-bottom: max(140px, calc(120px + env(safe-area-inset-bottom, 0px)));
 }
 .cat-row {
   display: flex;
@@ -1039,23 +1077,25 @@ button { border: none; background: none; cursor: pointer; padding: 0; }
 .qty {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 4px;
   background: var(--bg);
   border: 1px solid var(--line);
   border-radius: 999px;
   padding: 4px;
+  flex-shrink: 0;
 }
 .qty button {
-  width: 28px; height: 28px;
+  width: 34px; height: 34px;
   border-radius: 50%;
   display: grid; place-items: center;
   color: var(--text);
+  flex-shrink: 0;
 }
 .qty button:hover { background: var(--surface-2); }
 .qty .num {
   font-family: var(--font-mono);
   font-size: 13px;
-  min-width: 20px;
+  min-width: 22px;
   text-align: center;
 }
 
@@ -1129,8 +1169,10 @@ button { border: none; background: none; cursor: pointer; padding: 0; }
   background: var(--surface);
   border: 1px solid var(--line);
   color: var(--text);
-  font-size: 15px;
+  font-size: 16px; /* 16px prevents iOS zoom-on-focus */
   transition: border-color 0.15s;
+  -webkit-appearance: none;
+  appearance: none;
 }
 .form-field input:focus,
 .form-field textarea:focus,
@@ -1140,6 +1182,10 @@ button { border: none; background: none; cursor: pointer; padding: 0; }
 }
 .form-field textarea { min-height: 110px; resize: vertical; }
 .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+@media (max-width: 879.98px) {
+  .form-row { grid-template-columns: 1fr; }
+}
 
 .tile-row { display: flex; gap: 8px; flex-wrap: wrap; }
 .tile {
@@ -1355,6 +1401,13 @@ button { border: none; background: none; cursor: pointer; padding: 0; }
 .pdf-row .nm strong { display: block; }
 .pdf-row .nm small { font-family: var(--font-mono); font-size: 10px; color: #7a7065; letter-spacing: 0.06em; text-transform: uppercase; }
 .pdf-row .q { font-family: var(--font-mono); font-size: 12px; color: #4a4036; }
+
+/* Expert CTA middle column — prevents overflow with long product names */
+.expert-info {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+}
 
 /* Step indicator */
 .steps {

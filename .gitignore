@@ -6,6 +6,7 @@ next-env.d.ts
 
 # Misc
 .DS_Store
+CLAUDE.md
 *.pem
 
 # env files
