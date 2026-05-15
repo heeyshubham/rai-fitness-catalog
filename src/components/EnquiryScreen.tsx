@@ -20,16 +20,35 @@ interface FormState {
   email: string;
   phone: string;
   org: string;
+  orgType: string;
   useCase: string;
   timeline: string;
   city: string;
   message: string;
 }
 
+const ORG_TYPES = [
+  { value: 'commercial-gym', label: 'Commercial Gym / Fitness Center' },
+  { value: 'hotel', label: 'Hotel & Resort' },
+  { value: 'corporate', label: 'Corporate Wellness' },
+  { value: 'school', label: 'School / University' },
+  { value: 'sports', label: 'Sports Academy' },
+  { value: 'home', label: 'Home Setup' },
+  { value: 'other', label: 'Other' },
+];
+
+const CITIES = [
+  'Mumbai', 'Delhi', 'Bangalore', 'Chennai', 'Hyderabad', 'Pune', 'Kolkata',
+  'Ahmedabad', 'Jaipur', 'Surat', 'Lucknow', 'Kanpur', 'Nagpur', 'Indore',
+  'Thane', 'Bhopal', 'Visakhapatnam', 'Patna', 'Vadodara', 'Ludhiana',
+  'Coimbatore', 'Agra', 'Nashik', 'Faridabad', 'Meerut', 'Rajkot',
+  'Varanasi', 'Chandigarh', 'Gurgaon', 'Noida', 'Other',
+];
+
 export default function EnquiryScreen({ onBack, catalog }: EnquiryScreenProps) {
   const [step, setStep] = useState(0);
   const [form, setForm] = useState<FormState>({
-    name: '', email: '', phone: '', org: '',
+    name: '', email: '', phone: '', org: '', orgType: '',
     useCase: 'commercial', timeline: '1-3 mo', city: '',
     message: '',
   });
@@ -88,6 +107,15 @@ export default function EnquiryScreen({ onBack, catalog }: EnquiryScreenProps) {
               <label>Gym / Organization</label>
               <input value={form.org} onChange={e => update('org', e.target.value)} placeholder="e.g. Pulse Gym, Bengaluru" />
             </div>
+            <div className="form-field">
+              <label>Organization type</label>
+              <select value={form.orgType} onChange={e => update('orgType', e.target.value)}>
+                <option value="">Select type…</option>
+                {ORG_TYPES.map(o => (
+                  <option key={o.value} value={o.value}>{o.label}</option>
+                ))}
+              </select>
+            </div>
           </div>
         )}
 
@@ -114,12 +142,17 @@ export default function EnquiryScreen({ onBack, catalog }: EnquiryScreenProps) {
               ))}
             </div>
             <div className="form-field">
-              <label>City</label>
-              <input value={form.city} onChange={e => update('city', e.target.value)} placeholder="e.g. Mumbai" />
-            </div>
-            <div className="form-field">
               <label>Anything else?</label>
               <textarea value={form.message} onChange={e => update('message', e.target.value)} placeholder="Floor area, specific concerns, brand mix..." />
+            </div>
+            <div className="form-field">
+              <label>City</label>
+              <select value={form.city} onChange={e => update('city', e.target.value)}>
+                <option value="">Select your city…</option>
+                {CITIES.map(c => (
+                  <option key={c} value={c}>{c}</option>
+                ))}
+              </select>
             </div>
           </div>
         )}
@@ -134,7 +167,11 @@ export default function EnquiryScreen({ onBack, catalog }: EnquiryScreenProps) {
               <div className="section-h" style={{ margin: '0 0 10px' }}>Contact</div>
               <div style={{ fontFamily: 'var(--font-display)', fontSize: 18, fontWeight: 600 }}>{form.name || '—'}</div>
               <div style={{ color: 'var(--text-dim)', fontSize: 13 }}>{form.email || '—'} · {form.phone || '—'}</div>
-              <div style={{ color: 'var(--text-dim)', fontSize: 13, marginTop: 4 }}>{form.org || '—'}{form.city ? ` · ${form.city}` : ''}</div>
+              <div style={{ color: 'var(--text-dim)', fontSize: 13, marginTop: 4 }}>
+                {form.org || '—'}
+                {form.orgType ? ` · ${ORG_TYPES.find(o => o.value === form.orgType)?.label}` : ''}
+                {form.city ? ` · ${form.city}` : ''}
+              </div>
             </div>
             <div style={{ padding: 18, background: 'var(--surface)', borderRadius: 'var(--r-lg)', border: '1px solid var(--line)', marginBottom: 14 }}>
               <div className="section-h" style={{ margin: '0 0 10px' }}>Project</div>
