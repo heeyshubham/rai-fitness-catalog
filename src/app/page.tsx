@@ -294,6 +294,7 @@ export default function App() {
           catalog={catalog}
           onOpen={(id) => setRoute({ name: 'detail', id })}
           onTalk={() => openEnquiry(route.id)}
+          onCatalog={openCatalog}
         />
       )}
       {route.name === 'catalog' && (

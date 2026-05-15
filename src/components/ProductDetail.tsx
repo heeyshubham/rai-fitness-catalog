@@ -93,9 +93,10 @@ interface ProductDetailProps {
   catalog: CatalogState;
   onOpen: (id: string) => void;
   onTalk: () => void;
+  onCatalog: () => void;
 }
 
-export default function ProductDetail({ p, onClose, catalog, onOpen, onTalk }: ProductDetailProps) {
+export default function ProductDetail({ p, onClose, catalog, onOpen, onTalk, onCatalog }: ProductDetailProps) {
   const inCat = catalog.has(p.id);
   const cat = CATEGORIES.find(c => c.id === p.category);
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -232,13 +233,18 @@ export default function ProductDetail({ p, onClose, catalog, onOpen, onTalk }: P
         <button className="btn-ghost" onClick={onTalk} aria-label="Talk to expert">
           <Icon name="message" size={20} />
         </button>
-        <button
-          className={cls('btn-primary', inCat && 'added')}
-          onClick={() => inCat ? catalog.remove(p.id) : catalog.add(p.id)}
-        >
-          <Icon name={inCat ? 'check' : 'plus'} size={18} />
-          {inCat ? 'Added to Catalog' : 'Add to Catalog'}
-        </button>
+        {inCat ? (
+          <button className="btn-primary added" onClick={onCatalog}>
+            <Icon name="folder" size={18} />
+            View · {catalog.count} {catalog.count === 1 ? 'item' : 'items'} added
+            <Icon name="arrow-right" size={16} />
+          </button>
+        ) : (
+          <button className="btn-primary" onClick={() => catalog.add(p.id)}>
+            <Icon name="plus" size={18} />
+            Add to Catalog
+          </button>
+        )}
       </div>
     </div>
   );

@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { PRODUCTS, USE_CASES } from '@/data';
+import { PRODUCTS } from '@/data';
 import type { CatalogState } from '@/types';
 import Icon from './Icon';
 
@@ -19,9 +19,7 @@ interface FormState {
   name: string;
   email: string;
   phone: string;
-  org: string;
   orgType: string;
-  useCase: string;
   timeline: string;
   city: string;
   message: string;
@@ -48,8 +46,8 @@ const CITIES = [
 export default function EnquiryScreen({ onBack, catalog }: EnquiryScreenProps) {
   const [step, setStep] = useState(0);
   const [form, setForm] = useState<FormState>({
-    name: '', email: '', phone: '', org: '', orgType: '',
-    useCase: 'commercial', timeline: '1-3 mo', city: '',
+    name: '', email: '', phone: '', orgType: '',
+    timeline: '1-3 mo', city: '',
     message: '',
   });
 
@@ -93,19 +91,13 @@ export default function EnquiryScreen({ onBack, catalog }: EnquiryScreenProps) {
               <label>Full name</label>
               <input value={form.name} onChange={e => update('name', e.target.value)} placeholder="Your name" />
             </div>
-            <div className="form-row">
-              <div className="form-field">
-                <label>Email</label>
-                <input type="email" value={form.email} onChange={e => update('email', e.target.value)} placeholder="you@gym.com" />
-              </div>
-              <div className="form-field">
-                <label>Phone</label>
-                <input value={form.phone} onChange={e => update('phone', e.target.value)} placeholder="+91 …" />
-              </div>
+            <div className="form-field">
+              <label>Email</label>
+              <input type="email" value={form.email} onChange={e => update('email', e.target.value)} placeholder="you@gym.com" />
             </div>
             <div className="form-field">
-              <label>Gym / Organization</label>
-              <input value={form.org} onChange={e => update('org', e.target.value)} placeholder="e.g. Pulse Gym, Bengaluru" />
+              <label>Phone</label>
+              <input value={form.phone} onChange={e => update('phone', e.target.value)} placeholder="+91 …" />
             </div>
             <div className="form-field">
               <label>Organization type</label>
@@ -125,13 +117,14 @@ export default function EnquiryScreen({ onBack, catalog }: EnquiryScreenProps) {
               Tell us about the project.
             </h2>
             <p style={{ color: 'var(--text-dim)', margin: '0 0 22px' }}>Helps us match you with the right specialist.</p>
-            <label style={{ display: 'block', fontFamily: 'var(--font-mono)', fontSize: 10, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--text-mute)', marginBottom: 8 }}>Use case</label>
-            <div className="tile-row" style={{ marginBottom: 18 }}>
-              {USE_CASES.map(u => (
-                <button key={u.id} className={cls('tile', form.useCase === u.id && 'selected')} onClick={() => update('useCase', u.id)}>
-                  {u.label}
-                </button>
-              ))}
+            <div className="form-field">
+              <label>City</label>
+              <select value={form.city} onChange={e => update('city', e.target.value)}>
+                <option value="">Select your city…</option>
+                {CITIES.map(c => (
+                  <option key={c} value={c}>{c}</option>
+                ))}
+              </select>
             </div>
             <label style={{ display: 'block', fontFamily: 'var(--font-mono)', fontSize: 10, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--text-mute)', marginBottom: 8 }}>Timeline</label>
             <div className="tile-row" style={{ marginBottom: 18 }}>
@@ -144,15 +137,6 @@ export default function EnquiryScreen({ onBack, catalog }: EnquiryScreenProps) {
             <div className="form-field">
               <label>Anything else?</label>
               <textarea value={form.message} onChange={e => update('message', e.target.value)} placeholder="Floor area, specific concerns, brand mix..." />
-            </div>
-            <div className="form-field">
-              <label>City</label>
-              <select value={form.city} onChange={e => update('city', e.target.value)}>
-                <option value="">Select your city…</option>
-                {CITIES.map(c => (
-                  <option key={c} value={c}>{c}</option>
-                ))}
-              </select>
             </div>
           </div>
         )}
@@ -168,22 +152,15 @@ export default function EnquiryScreen({ onBack, catalog }: EnquiryScreenProps) {
               <div style={{ fontFamily: 'var(--font-display)', fontSize: 18, fontWeight: 600 }}>{form.name || '—'}</div>
               <div style={{ color: 'var(--text-dim)', fontSize: 13 }}>{form.email || '—'} · {form.phone || '—'}</div>
               <div style={{ color: 'var(--text-dim)', fontSize: 13, marginTop: 4 }}>
-                {form.org || '—'}
-                {form.orgType ? ` · ${ORG_TYPES.find(o => o.value === form.orgType)?.label}` : ''}
+                {form.orgType ? ORG_TYPES.find(o => o.value === form.orgType)?.label : '—'}
                 {form.city ? ` · ${form.city}` : ''}
               </div>
             </div>
             <div style={{ padding: 18, background: 'var(--surface)', borderRadius: 'var(--r-lg)', border: '1px solid var(--line)', marginBottom: 14 }}>
               <div className="section-h" style={{ margin: '0 0 10px' }}>Project</div>
-              <div style={{ display: 'flex', gap: 14 }}>
-                <div>
-                  <div style={{ fontFamily: 'var(--font-mono)', fontSize: 10, letterSpacing: '0.1em', color: 'var(--text-mute)', textTransform: 'uppercase' }}>Use case</div>
-                  <div style={{ marginTop: 2, fontWeight: 500 }}>{USE_CASES.find(u => u.id === form.useCase)?.label}</div>
-                </div>
-                <div>
-                  <div style={{ fontFamily: 'var(--font-mono)', fontSize: 10, letterSpacing: '0.1em', color: 'var(--text-mute)', textTransform: 'uppercase' }}>Timeline</div>
-                  <div style={{ marginTop: 2, fontWeight: 500 }}>{form.timeline}</div>
-                </div>
+              <div>
+                <div style={{ fontFamily: 'var(--font-mono)', fontSize: 10, letterSpacing: '0.1em', color: 'var(--text-mute)', textTransform: 'uppercase' }}>Timeline</div>
+                <div style={{ marginTop: 2, fontWeight: 500 }}>{form.timeline}</div>
               </div>
             </div>
             <div style={{ padding: 18, background: 'var(--surface)', borderRadius: 'var(--r-lg)', border: '1px solid var(--line)' }}>
