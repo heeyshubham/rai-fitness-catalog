@@ -43,8 +43,21 @@ const CITIES = [
   'Varanasi', 'Chandigarh', 'Gurgaon', 'Noida', 'Other',
 ];
 
+async function downloadQuote(form: FormState, catalogItems: Record<string, number>) {
+  const { pdf } = await import('@react-pdf/renderer');
+  const { default: QuotePDFComp } = await import('./QuotePDF');
+  const blob = await pdf(<QuotePDFComp form={form} catalogItems={catalogItems} />).toBlob();
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `rai-fitness-quote-${Date.now()}.pdf`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
 export default function EnquiryScreen({ onBack, catalog }: EnquiryScreenProps) {
   const [step, setStep] = useState(0);
+  const [generating, setGenerating] = useState(false);
   const [form, setForm] = useState<FormState>({
     name: '', email: '', phone: '', orgType: '',
     timeline: '1-3 mo', city: '',
@@ -188,7 +201,7 @@ export default function EnquiryScreen({ onBack, catalog }: EnquiryScreenProps) {
               <Icon name="check" size={36} stroke="#fff" sw={2.2} />
             </div>
             <h2>Request received.</h2>
-            <p>A specialist will reach out within 24 hours. We&apos;ve sent a confirmation to <strong style={{ color: 'var(--text)' }}>{form.email || 'your email'}</strong>.</p>
+            <p>Your quote PDF has downloaded. A specialist will reach out within 24 hours at <strong style={{ color: 'var(--text)' }}>{form.email || 'your email'}</strong>.</p>
             <button className="btn-primary" onClick={onBack}>Back to catalog</button>
           </div>
         )}
@@ -199,13 +212,24 @@ export default function EnquiryScreen({ onBack, catalog }: EnquiryScreenProps) {
           {step > 0 && <button className="btn-ghost" onClick={() => setStep(s => s - 1)}><Icon name="arrow-left" size={18} /></button>}
           <button
             className="btn-primary"
-            onClick={() => {
+            disabled={generating}
+            onClick={async () => {
               if (step === 0 && !form.name) return;
-              setStep(s => s + 1);
+              if (step === 2) {
+                setGenerating(true);
+                try {
+                  await downloadQuote(form, catalog.items);
+                } finally {
+                  setGenerating(false);
+                }
+                setStep(3);
+              } else {
+                setStep(s => s + 1);
+              }
             }}
           >
-            {step === 2 ? 'Send request' : 'Continue'}
-            <Icon name="arrow-right" size={18} />
+            {generating ? 'Generating…' : step === 2 ? 'Send & Download PDF' : 'Continue'}
+            {!generating && <Icon name="arrow-right" size={18} />}
           </button>
         </div>
       )}
