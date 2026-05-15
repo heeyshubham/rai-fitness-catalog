@@ -275,7 +275,7 @@ export default function App() {
           {catalog.distinct > 0 && (
             <button className="fab" onClick={openCatalog}>
               <span className="icon-circle"><Icon name="folder" size={14} /></span>
-              {catalog.distinct} {catalog.distinct === 1 ? 'item' : 'items'}
+              View · {catalog.count} {catalog.count === 1 ? 'item' : 'items'}
             </button>
           )}
           <button className="fab accent" onClick={() => openEnquiry()}>
