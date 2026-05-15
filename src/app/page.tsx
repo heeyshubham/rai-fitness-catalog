@@ -76,11 +76,10 @@ function DesktopCatalogPanel({
         </div>
         <Icon name="pdf" size={22} stroke="var(--text-dim)" />
       </div>
-      <button className="btn-primary" onClick={onEnquire}>
-        <Icon name="pdf" size={16} />
-        Generate quote PDF
+      <button className="btn-block" onClick={onEnquire} style={{ color: 'var(--accent)', borderColor: 'var(--accent)', marginBottom: 8 }}>
+        <Icon name="pdf" size={14} stroke="var(--accent)" /> Generate quote PDF
       </button>
-      <button className="btn-block" style={{ marginTop: 8 }}>
+      <button className="btn-block">
         <Icon name="share" size={14} /> Share catalog link
       </button>
     </div>
